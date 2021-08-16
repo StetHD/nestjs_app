@@ -1,5 +1,6 @@
 import { Logger, INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {config} from './config';
 
 export function setupDocumentation(app: INestApplication): any {
 
@@ -7,9 +8,9 @@ export function setupDocumentation(app: INestApplication): any {
     const swaggerEndpoint = '/api/v1/api-docs';
 
     const options = new DocumentBuilder()
-        .setTitle('sample')
-        .setDescription('sample')
-        .setVersion('sample')
+        .setTitle(config.get('swagger.title'))
+        .setDescription(config.get('swagger.description'))
+        .setVersion(config.get('swagger.version'))
         .build()
 
     const document = SwaggerModule.createDocument(app, options);

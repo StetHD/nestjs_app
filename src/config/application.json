@@ -1,0 +1,15 @@
+{
+  "swagger": {
+    "default-include-pattern": "/api/.*",
+    "title": "companyStation API",
+    "description": "companyStation API documentation",
+    "version": "0.0.1",
+    "terms-of-service-url": null,
+    "contact-name": null,
+    "contact-url": null,
+    "contact-email": null,
+    "license": null,
+    "license-url": null,
+    "path": "/api/v2/api-docs"
+  }
+}
