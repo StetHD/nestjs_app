@@ -18,6 +18,7 @@ export class CompanyController {
     @ApiResponse({
         status: 200,
         description: 'company retrieved',
+        type: [CompanyDto]
     })
     @Get()
     getCompanies(): Promise<CompanyDto[]> {

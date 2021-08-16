@@ -5,7 +5,7 @@ import {config} from './config';
 export function setupDocumentation(app: INestApplication): any {
 
     const logger: Logger = new Logger('Swagger');
-    const swaggerEndpoint = '/api/v1/api-docs';
+    const swaggerEndpoint = config.get('swagger.path');
 
     const options = new DocumentBuilder()
         .setTitle(config.get('swagger.title'))

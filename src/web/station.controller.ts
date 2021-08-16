@@ -18,6 +18,7 @@ export class StationController {
     @ApiResponse({
         status: 200,
         description: 'station retrieved',
+        type: [StationDto]
     })
     @Get()
     getStations(): Promise<StationDto[]> {
