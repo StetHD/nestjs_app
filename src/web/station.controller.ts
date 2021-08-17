@@ -3,7 +3,7 @@ import {
     Controller,
     Delete,
     Get, Logger,
-    Param,
+    Param, ParseFloatPipe,
     ParseUUIDPipe,
     Post,
     Put,
@@ -38,20 +38,42 @@ export class StationController {
     })
     @Get()
     async getAll(@Req() request: Request,
+                 @Query('long', ParseFloatPipe) longitude,
+                 @Query('lat', ParseFloatPipe) latitude,
+                 @Query('radius', ParseFloatPipe) radius,
                  @Query('sort') sort,
                  @Query('page') page,
                  @Query('size') size,
     ): Promise<StationDto[]> {
+        this.logger.log(typeof latitude);
+        this.logger.log(typeof longitude);
+        this.logger.log(typeof radius);
+        this.logger.log(`(lat: ${latitude}, long: ${longitude}) => radius: ${radius}`);
+
         const pageRequest: PageRequest = new PageRequest(page, size, sort);
-        const [stations, count] = await this.stationService.findAndCount({
-            skip: +pageRequest.page * pageRequest.size,
-            take: +pageRequest.size,
-            order: pageRequest.sort.asOrder(),
-        });
+        if (latitude && longitude && radius) {
+            const [stations, _] = await this.stationService.findAndCountByCoordination({
+                skip: +pageRequest.page * pageRequest.size,
+                take: +pageRequest.size,
+                order: pageRequest.sort.asOrder(),
+            }, {
+                longitude,
+                latitude,
+                radius,
+            });
 
-        HeaderUtils.addPaginationHeaders(request.res, new Page(stations, count, pageRequest));
+            return stations;
+        } else {
+            const [stations, count] = await this.stationService.findAndCount({
+                skip: +pageRequest.page * pageRequest.size,
+                take: +pageRequest.size,
+                order: pageRequest.sort.asOrder(),
+            });
 
-        return stations;
+            HeaderUtils.addPaginationHeaders(request.res, new Page(stations, count, pageRequest));
+
+            return stations;
+        }
     }
 
     @ApiOperation({

@@ -1,8 +1,8 @@
 import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
-import {InjectRepository} from "@nestjs/typeorm";
-import {StationRepository} from "../repository/station.repository";
+import {InjectRepository} from '@nestjs/typeorm';
+import {StationRepository} from '../repository/station.repository';
 import {CreateStationDto, StationDto} from './dto/station.dto';
-import {FindManyOptions} from 'typeorm';
+import {Between, FindManyOptions, LessThan, MoreThan} from 'typeorm';
 import {StationMapper} from './mapper/station.mapper';
 
 const relationshipNames = [];
@@ -16,7 +16,7 @@ export class StationService {
     }
 
     async findById(id: string): Promise<StationDto | undefined> {
-        const options = { relations: relationshipNames };
+        const options = {relations: relationshipNames};
         const result = await this.stationRepository.findOne(id, options);
         return StationMapper.fromEntityToDTO(result);
     }
@@ -28,6 +28,25 @@ export class StationService {
 
     async findAndCount(options: FindManyOptions<StationDto>): Promise<[StationDto[], number]> {
         options.relations = relationshipNames;
+        const resultList = await this.stationRepository.findAndCount(options);
+        const stationDto: StationDto[] = [];
+        const result: [StationDto[], number] = [[], 0];
+        if (resultList && resultList[0]) {
+            resultList[0].forEach(station => stationDto.push(StationMapper.fromEntityToDTO(station)));
+            result[0] = stationDto;
+            result[1] = resultList[1];
+        }
+        return result;
+    }
+
+    async findAndCountByCoordination(options: FindManyOptions<StationDto>,
+                                     coordination: { longitude: number, latitude: number, radius: number }
+    ): Promise<[StationDto[], number]> {
+        options.relations = relationshipNames;
+        options.where = {
+            longitude: Between(coordination.longitude - coordination.radius, coordination.longitude + coordination.radius),
+            latitude: Between(coordination.latitude - coordination.radius, coordination.latitude + coordination.radius),
+        };
         const resultList = await this.stationRepository.findAndCount(options);
         const stationDto: StationDto[] = [];
         const result: [StationDto[], number] = [[], 0];
