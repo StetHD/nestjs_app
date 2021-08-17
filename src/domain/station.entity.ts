@@ -1,19 +1,19 @@
 import {BaseEntity} from './base/base.entity';
-import {Column, Entity} from 'typeorm';
-import {ApiProperty} from '@nestjs/swagger';
+import {Column, Entity, ManyToOne} from 'typeorm';
+import {Company} from './company.entity';
 
 @Entity('techran_station')
 export class Station extends BaseEntity{
 
-    @ApiProperty({required: true, uniqueItems: true, example: "techran station", description: "Station Name"})
-    @Column({nullable: false})
+    @Column({name: 'name', nullable: false})
     name: string;
 
-    @ApiProperty({required: true, example: 23.12, description: "Latitude"})
-    @Column({nullable: false})
+    @Column({type: 'decimal', name: 'latitude', nullable: false})
     latitude: number;
 
-    @ApiProperty({required: true, example: 43.12, description: "Longitude"})
-    @Column({nullable: false})
+    @Column({type: 'decimal', name: 'longitude', nullable: false})
     longitude: number;
+
+    @ManyToOne(type => Company)
+    company: Company;
 }

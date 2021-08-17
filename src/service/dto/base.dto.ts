@@ -1,7 +1,5 @@
-export class BaseDTO {
+export class BaseDto {
     id?: string;
-
     createdDate?: Date;
-
     lastModifiedDate?: Date;
 }

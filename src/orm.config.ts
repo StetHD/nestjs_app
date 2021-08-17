@@ -32,7 +32,7 @@ function ormConfig(): TypeOrmModuleOptions {
             username: 'masoud',
             password: '',
             logging: true,
-            synchronize: commonConf.SYNCRONIZE,
+            synchronize: true,
             entities: commonConf.ENTITIES,
             migrations: commonConf.MIGRATIONS,
             cli: commonConf.CLI,

@@ -47,8 +47,6 @@ export class Config {
     }
 }
 
-console.log(__dirname);
-
 const jsonConfigPath = joinPath(__dirname, 'config', 'application.json');
 const envJsonConfigPath = joinPath(__dirname, 'config', `application-${process.env.ENV}.json`);
 
