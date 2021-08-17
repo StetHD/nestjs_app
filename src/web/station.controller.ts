@@ -3,7 +3,7 @@ import {
     Controller,
     Delete,
     Get, Logger,
-    Param, ParseFloatPipe,
+    Param, ParseFloatPipe, ParseIntPipe,
     ParseUUIDPipe,
     Post,
     Put,
@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import {LoggingInterceptor} from '../common/interceptors/logging.interceptor';
 import {StationService} from '../service/station.service';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {CreateStationDto, StationDto, UpdateStationDto} from '../service/dto/station.dto';
+import {ApiOperation, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {CreateStationDto, StationDto} from '../service/dto/station.dto';
 import {Page, PageRequest} from '../domain/base/pagination.entity';
 import {HeaderUtils} from '../common/header-utils';
 import {Request} from 'express';
@@ -28,6 +28,50 @@ export class StationController {
     constructor(private readonly stationService: StationService) {
     }
 
+    @ApiQuery({
+        name: 'long',
+        type: Number,
+        required: false,
+        example: '2.45',
+        description: 'Longitude of the point to query'
+    })
+
+    @ApiQuery({
+        name: 'lat',
+        type: Number,
+        required: false,
+        example: '1.22',
+        description: 'Latitude of the point to query'
+    })
+    @ApiQuery({
+        name: 'raduis',
+        type: Number,
+        required: false,
+        example: '10.21',
+        description: 'Radius from the point to query'
+    })
+    @ApiQuery({
+        name: 'size',
+        type: Number,
+        required: false,
+        example: '20',
+        description: 'Pagination size'
+    })
+    @ApiQuery({
+        name: 'page',
+        type: Number,
+        required: false,
+        example: '10',
+        description: 'Pagination page index'
+    })
+
+    @ApiQuery({
+        name: 'sort',
+        type: String,
+        required: false,
+        example: 'id,ASC',
+        description: 'Sort result based on a field'
+    })
     @ApiOperation({
         description: 'Get stations'
     })
@@ -42,8 +86,8 @@ export class StationController {
                  @Query('lat', ParseFloatPipe) latitude,
                  @Query('radius', ParseFloatPipe) radius,
                  @Query('sort') sort,
-                 @Query('page') page,
-                 @Query('size') size,
+                 @Query('page', ParseIntPipe) page,
+                 @Query('size', ParseIntPipe) size,
     ): Promise<StationDto[]> {
         this.logger.log(typeof latitude);
         this.logger.log(typeof longitude);
@@ -53,8 +97,8 @@ export class StationController {
         const pageRequest: PageRequest = new PageRequest(page, size, sort);
         if (latitude && longitude && radius) {
             const [stations, _] = await this.stationService.findAndCountByCoordination({
-                skip: +pageRequest.page * pageRequest.size,
-                take: +pageRequest.size,
+                skip: pageRequest.page * pageRequest.size,
+                take: pageRequest.size,
                 order: pageRequest.sort.asOrder(),
             }, {
                 longitude,
