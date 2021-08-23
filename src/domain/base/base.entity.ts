@@ -5,9 +5,9 @@ export abstract class BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id?: string;
 
-    @Column({nullable: true})
+    @Column({name: 'created_date', nullable: false, default: () => 'now()'})
     createdDate?: Date;
 
-    @Column({nullable: true})
-    lastModifiedDate?: Date;
+    @Column({name: 'last_modified_date', nullable: true, default: () => 'now()'})
+    modifiedDate?: Date;
 }

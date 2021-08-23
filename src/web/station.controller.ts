@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import {LoggingInterceptor} from '../common/interceptors/logging.interceptor';
 import {StationService} from '../service/station.service';
-import {ApiOperation, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {CreateStationDto, StationDto} from '../service/dto/station.dto';
 import {Page, PageRequest} from '../domain/base/pagination.entity';
 import {HeaderUtils} from '../common/header-utils';
@@ -35,7 +35,6 @@ export class StationController {
         example: '2.45',
         description: 'Longitude of the point to query'
     })
-
     @ApiQuery({
         name: 'lat',
         type: Number,
@@ -64,7 +63,6 @@ export class StationController {
         example: '10',
         description: 'Pagination page index'
     })
-
     @ApiQuery({
         name: 'sort',
         type: String,
@@ -120,6 +118,13 @@ export class StationController {
         }
     }
 
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true,
+        example: '73d993dd-766c-4c3b-b209-7b9b57289eaf',
+        description: 'UUID of a station'
+    })
     @ApiOperation({
         description: 'Get a station'
     })

@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {CompanyRepository} from '../repository/company.repository';
 import {CompanyDto, CreateCompanyDto, UpdateCompanyDto} from './dto/company.dto';
-import {FindManyOptions} from 'typeorm';
+import {FindManyOptions, FindOneOptions} from 'typeorm';
 import {CompanyMapper} from './mapper/company.mapper';
 import {StationDto} from "./dto/station.dto";
 
@@ -22,7 +22,7 @@ export class CompanyService {
         return CompanyMapper.fromEntityToDTO(result);
     }
 
-    async find(options: FindManyOptions<CompanyDto>): Promise<CompanyDto | undefined> {
+    async find(options: FindOneOptions<CompanyDto>): Promise<CompanyDto | undefined> {
         const result = await this.companyRepository.findOne(options);
         return CompanyMapper.fromEntityToDTO(result);
     }

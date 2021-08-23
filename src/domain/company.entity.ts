@@ -10,7 +10,7 @@ export class Company extends BaseEntity {
     name: string;
 
     @OneToMany(type => Station, other => other.company)
-    stations: Station[];
+    stations?: Station[];
 
     @ManyToMany(type => CompanyItem)
     @JoinTable({
@@ -18,5 +18,5 @@ export class Company extends BaseEntity {
         joinColumn: { name: 'company_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'company_item_id', referencedColumnName: 'id' }
     })
-    companyItems: CompanyItem[];
+    companyItems?: CompanyItem[];
 }

@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {StationRepository} from '../repository/station.repository';
 import {CreateStationDto, StationDto} from './dto/station.dto';
-import {Between, FindManyOptions, LessThan, MoreThan} from 'typeorm';
+import {Between, FindManyOptions, FindOneOptions} from 'typeorm';
 import {StationMapper} from './mapper/station.mapper';
 
 const relationshipNames = [];
@@ -21,7 +21,7 @@ export class StationService {
         return StationMapper.fromEntityToDTO(result);
     }
 
-    async find(options: FindManyOptions<StationDto>): Promise<StationDto | undefined> {
+    async find(options: FindOneOptions<StationDto>): Promise<StationDto | undefined> {
         const result = await this.stationRepository.findOne(options);
         return StationMapper.fromEntityToDTO(result);
     }
