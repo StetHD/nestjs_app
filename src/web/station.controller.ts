@@ -80,17 +80,16 @@ export class StationController {
     })
     @Get()
     async getAll(@Req() request: Request,
-                 @Query('long', ParseFloatPipe) longitude,
-                 @Query('lat', ParseFloatPipe) latitude,
-                 @Query('radius', ParseFloatPipe) radius,
+                 @Query('long') longitude,
+                 @Query('lat') latitude,
+                 @Query('radius') radius,
                  @Query('sort') sort,
-                 @Query('page', ParseIntPipe) page,
-                 @Query('size', ParseIntPipe) size,
+                 @Query('page') page,
+                 @Query('size') size,
     ): Promise<StationDto[]> {
-        this.logger.log(typeof latitude);
-        this.logger.log(typeof longitude);
-        this.logger.log(typeof radius);
-        this.logger.log(`(lat: ${latitude}, long: ${longitude}) => radius: ${radius}`);
+        longitude = Number(longitude);
+        latitude = Number(latitude);
+        radius = Number(radius);
 
         const pageRequest: PageRequest = new PageRequest(page, size, sort);
         if (latitude && longitude && radius) {

@@ -29,9 +29,9 @@ export class PageRequest {
     @Type(() => Sort)
     sort: Sort = new Sort('id,ASC')
 
-    constructor(page: number, size: number, sort: string) {
-        this.page = page || this.page;
-        this.size = size || this.size;
+    constructor(page: number | string, size: number | string, sort: string) {
+        this.page = +page || this.page;
+        this.size = +size || this.size;
         this.sort = sort ? new Sort(sort) : this.sort;
     }
 }
